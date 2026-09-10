@@ -37,7 +37,6 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape key and manage body overflow
   useEffect(() => {
@@ -182,7 +181,6 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
       }}
     >
       <div
-        ref={modalRef}
         id="add-product-modal-container"
         role="dialog"
         aria-modal="true"
