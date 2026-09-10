@@ -36,6 +36,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,12 +49,12 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     };
 
     if (isOpen) {
+      setShouldRender(true);
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
       const frame = requestAnimationFrame(() => setIsVisible(true));
       return () => {
         cancelAnimationFrame(frame);
-        document.body.style.overflow = "";
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
@@ -61,9 +62,11 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     setIsVisible(false);
     document.body.style.overflow = "";
     window.removeEventListener("keydown", handleKeyDown);
+    const timeout = setTimeout(() => setShouldRender(false), 150);
+    return () => clearTimeout(timeout);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
 
   const handleFileProcess = (file: File) => {
     if (!file.type.startsWith("image/")) {
