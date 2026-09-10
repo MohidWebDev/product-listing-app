@@ -66,7 +66,6 @@ export default function App() {
           onSearchChange={setSearchQuery}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
-          onOpenAddModal={() => setIsAddModalOpen(true)}
         />
 
         {/* Catalog Inventory section */}

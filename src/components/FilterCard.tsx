@@ -7,7 +7,6 @@ interface FilterCardProps {
   onSearchChange: (query: string) => void;
   selectedCategory: ProductCategory | "All";
   onCategoryChange: (category: ProductCategory | "All") => void;
-  onOpenAddModal?: () => void;
 }
 
 export const FilterCard: React.FC<FilterCardProps> = ({
