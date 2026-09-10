@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import {
   Plus,
   DollarSign,
@@ -37,8 +37,12 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const [contentHeight, setContentHeight] = useState<number | undefined>(
+    undefined,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageContentRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape key and manage body overflow
   useEffect(() => {
@@ -65,6 +69,12 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     const timeout = setTimeout(() => setShouldRender(false), 150);
     return () => clearTimeout(timeout);
   }, [isOpen, onClose]);
+
+  useLayoutEffect(() => {
+    if (imageContentRef.current) {
+      setContentHeight(imageContentRef.current.scrollHeight);
+    }
+  }, [imageMode, uploadedImage, isDragging]);
 
   if (!shouldRender) return null;
 
@@ -368,103 +378,111 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                 </div>
               </div>
 
-              {/* Upload from Computer Mode */}
-              {imageMode === "upload" && (
-                <div>
-                  <input
-                    ref={fileInputRef}
-                    id="modal-product-file-input"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileInputChange}
-                    className="hidden"
-                  />
+              {/* Animated height wrapper for upload/URL content */}
+              <div
+                className="overflow-hidden transition-[height] duration-200 ease-in-out"
+                style={{ height: contentHeight }}
+              >
+                <div ref={imageContentRef}>
+                  {/* Upload from Computer Mode */}
+                  {imageMode === "upload" && (
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        id="modal-product-file-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileInputChange}
+                        className="hidden"
+                      />
 
-                  {uploadedImage ? (
-                    <div
-                      id="modal-uploaded-image-preview"
-                      className="flex items-center justify-between p-3 bg-indigo-50/60 border border-indigo-200/80 rounded-lg"
-                    >
-                      <div className="flex items-center gap-3 overflow-hidden">
-                        <img
-                          src={uploadedImage}
-                          alt="Product preview"
-                          className="w-14 h-14 object-cover rounded-md border border-indigo-200/80 shadow-2xs shrink-0"
-                        />
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-xs font-medium text-slate-800 truncate">
-                            {uploadedFileName || "Uploaded Image"}
-                          </span>
-                          <span className="text-[11px] text-indigo-600 font-medium">
-                            Ready to use
-                          </span>
+                      {uploadedImage ? (
+                        <div
+                          id="modal-uploaded-image-preview"
+                          className="flex items-center justify-between p-3 bg-indigo-50/60 border border-indigo-200/80 rounded-lg"
+                        >
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <img
+                              src={uploadedImage}
+                              alt="Product preview"
+                              className="w-14 h-14 object-cover rounded-md border border-indigo-200/80 shadow-2xs shrink-0"
+                            />
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs font-medium text-slate-800 truncate">
+                                {uploadedFileName || "Uploaded Image"}
+                              </span>
+                              <span className="text-[11px] text-indigo-600 font-medium">
+                                Ready to use
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            id="modal-remove-uploaded-image-btn"
+                            type="button"
+                            onClick={clearUploadedFile}
+                            title="Remove image"
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
-                      </div>
-                      <button
-                        id="modal-remove-uploaded-image-btn"
-                        type="button"
-                        onClick={clearUploadedFile}
-                        title="Remove image"
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                      ) : (
+                        <div
+                          id="modal-image-dropzone"
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => fileInputRef.current?.click()}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              fileInputRef.current?.click();
+                            }
+                          }}
+                          onDragOver={handleDragOver}
+                          onDragLeave={handleDragLeave}
+                          onDrop={handleDrop}
+                          className={`w-full border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5 ${
+                            isDragging
+                              ? "border-indigo-500 bg-indigo-50/60"
+                              : "border-slate-200 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-300"
+                          }`}
+                        >
+                          <div className="w-9 h-9 rounded-full bg-indigo-100/70 text-indigo-600 flex items-center justify-center">
+                            <Upload className="w-4 h-4" />
+                          </div>
+                          <p className="text-xs font-medium text-slate-700">
+                            <span className="text-indigo-600 font-semibold">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop image here
+                          </p>
+                          <p className="text-[11px] text-slate-400">
+                            PNG, JPG, GIF, WebP up to 5MB (a placeholder is
+                            shown if left empty)
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div
-                      id="modal-image-dropzone"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => fileInputRef.current?.click()}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          fileInputRef.current?.click();
-                        }
-                      }}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      className={`w-full border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5 ${
-                        isDragging
-                          ? "border-indigo-500 bg-indigo-50/60"
-                          : "border-slate-200 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-300"
-                      }`}
-                    >
-                      <div className="w-9 h-9 rounded-full bg-indigo-100/70 text-indigo-600 flex items-center justify-center">
-                        <Upload className="w-4 h-4" />
+                  )}
+
+                  {/* Image Link URL Mode */}
+                  {imageMode === "url" && (
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                        <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
                       </div>
-                      <p className="text-xs font-medium text-slate-700">
-                        <span className="text-indigo-600 font-semibold">
-                          Click to upload
-                        </span>{" "}
-                        or drag and drop image here
-                      </p>
-                      <p className="text-[11px] text-slate-400">
-                        PNG, JPG, GIF, WebP up to 5MB (a placeholder is shown if
-                        left empty)
-                      </p>
+                      <input
+                        id="modal-product-image-input"
+                        type="url"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        placeholder="https://images.unsplash.com/... (placeholder shown if empty)"
+                        className="w-full bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm pl-8 pr-3.5 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+                      />
                     </div>
                   )}
                 </div>
-              )}
-
-              {/* Image Link URL Mode */}
-              {imageMode === "url" && (
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
-                  </div>
-                  <input
-                    id="modal-product-image-input"
-                    type="url"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://images.unsplash.com/... (placeholder shown if empty)"
-                    className="w-full bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm pl-8 pr-3.5 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
-                  />
-                </div>
-              )}
+              </div>
             </div>
           </div>
 
