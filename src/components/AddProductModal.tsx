@@ -35,6 +35,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,12 +50,17 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     if (isOpen) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+      const frame = requestAnimationFrame(() => setIsVisible(true));
+      return () => {
+        cancelAnimationFrame(frame);
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     }
 
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    setIsVisible(false);
+    document.body.style.overflow = "";
+    window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -173,7 +179,9 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   return (
     <div
       id="add-product-modal-backdrop"
-      className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+      className={`fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-150 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           handleClose();
@@ -185,7 +193,9 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-add-product-title"
-        className="bg-white rounded-2xl border border-slate-200/90 shadow-2xl max-w-xl w-full p-5 sm:p-7 relative my-8"
+        className={`bg-white rounded-2xl border border-slate-200/90 shadow-2xl max-w-xl w-full p-5 sm:p-7 relative my-8 transition-all duration-150 ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
