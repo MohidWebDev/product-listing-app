@@ -1,23 +1,32 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React from "react";
+import { Plus } from "lucide-react";
 
 interface HeaderProps {
   totalCount: number;
   onOpenAddModal: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ totalCount, onOpenAddModal }) => {
+export const Header: React.FC<HeaderProps> = ({
+  totalCount,
+  onOpenAddModal,
+}) => {
   return (
-    <header id="app-header" className="flex items-center justify-between gap-4 py-2 flex-wrap sm:flex-nowrap">
+    <header
+      id="app-header"
+      className="flex items-center justify-between gap-4 py-2 flex-wrap sm:flex-nowrap"
+    >
       <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-        <h1 id="page-title" className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+        <h1
+          id="page-title"
+          className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight"
+        >
           Product Catalog
         </h1>
         <span
           id="product-count-badge"
           className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-indigo-100/80 text-indigo-700 border border-indigo-200/60 shadow-2xs whitespace-nowrap transition-all"
         >
-          {totalCount} {totalCount === 1 ? 'Total Product' : 'Total Products'}
+          {totalCount} {totalCount === 1 ? "Total Product" : "Total Products"}
         </span>
       </div>
 

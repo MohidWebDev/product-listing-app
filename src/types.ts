@@ -1,10 +1,14 @@
-export type ProductCategory = 'Electronics' | 'Office Furniture' | 'Audio' | 'Accessories';
+export type ProductCategory =
+  | "Electronics"
+  | "Office Furniture"
+  | "Audio"
+  | "Accessories";
 
 export const CATEGORIES: ProductCategory[] = [
-  'Electronics',
-  'Office Furniture',
-  'Audio',
-  'Accessories'
+  "Electronics",
+  "Office Furniture",
+  "Audio",
+  "Accessories",
 ];
 
 export interface Product {

@@ -1,16 +1,18 @@
-import { useState, useMemo } from 'react';
-import { Product, ProductCategory } from './types';
-import { INITIAL_PRODUCTS } from './data/initialProducts';
-import { Header } from './components/Header';
-import { FilterCard } from './components/FilterCard';
-import { ProductCard } from './components/ProductCard';
-import { EmptyState } from './components/EmptyState';
-import { AddProductModal } from './components/AddProductModal';
+import { useState, useMemo } from "react";
+import { Product, ProductCategory } from "./types";
+import { INITIAL_PRODUCTS } from "./data/initialProducts";
+import { Header } from "./components/Header";
+import { FilterCard } from "./components/FilterCard";
+import { ProductCard } from "./components/ProductCard";
+import { EmptyState } from "./components/EmptyState";
+import { AddProductModal } from "./components/AddProductModal";
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'All'>('All');
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<
+    ProductCategory | "All"
+  >("All");
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
   // Filter products by combining search query (case-insensitive) and category match
@@ -18,13 +20,21 @@ export default function App() {
     const trimmedQuery = searchQuery.trim().toLowerCase();
 
     return products.filter((product) => {
-      const matchesSearch = trimmedQuery === '' || product.name.toLowerCase().includes(trimmedQuery);
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+      const matchesSearch =
+        trimmedQuery === "" ||
+        product.name.toLowerCase().includes(trimmedQuery);
+      const matchesCategory =
+        selectedCategory === "All" || product.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [products, searchQuery, selectedCategory]);
 
-  const handleAddProduct = (newProd: { name: string; category: ProductCategory; price: number; imageUrl?: string }) => {
+  const handleAddProduct = (newProd: {
+    name: string;
+    category: ProductCategory;
+    price: number;
+    imageUrl?: string;
+  }) => {
     const product: Product = {
       id: `prod-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       ...newProd,
@@ -37,8 +47,8 @@ export default function App() {
   };
 
   const handleResetFilters = () => {
-    setSearchQuery('');
-    setSelectedCategory('All');
+    setSearchQuery("");
+    setSelectedCategory("All");
   };
 
   return (
@@ -60,9 +70,16 @@ export default function App() {
         />
 
         {/* Catalog Inventory section */}
-        <section id="catalog-inventory-section" aria-labelledby="inventory-heading" className="space-y-4 pt-2">
+        <section
+          id="catalog-inventory-section"
+          aria-labelledby="inventory-heading"
+          className="space-y-4 pt-2"
+        >
           <div className="flex items-center justify-between">
-            <h2 id="inventory-heading" className="text-lg font-semibold text-slate-900 tracking-tight">
+            <h2
+              id="inventory-heading"
+              className="text-lg font-semibold text-slate-900 tracking-tight"
+            >
               Catalog Inventory
             </h2>
           </div>

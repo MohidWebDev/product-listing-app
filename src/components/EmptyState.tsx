@@ -1,5 +1,5 @@
-import React from 'react';
-import { PackageSearch } from 'lucide-react';
+import React from "react";
+import { PackageSearch } from "lucide-react";
 
 interface EmptyStateProps {
   onResetFilters: () => void;

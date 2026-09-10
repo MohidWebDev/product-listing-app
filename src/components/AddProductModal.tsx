@@ -1,12 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Plus, DollarSign, ChevronDown, Image as ImageIcon, Upload, Link as LinkIcon, X } from 'lucide-react';
-import { ProductCategory, CATEGORIES } from '../types';
-import { getDefaultProductImage } from '../data/initialProducts';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Plus,
+  DollarSign,
+  ChevronDown,
+  Image as ImageIcon,
+  Upload,
+  Link as LinkIcon,
+  X,
+} from "lucide-react";
+import { ProductCategory, CATEGORIES } from "../types";
+import { getDefaultProductImage } from "../data/initialProducts";
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddProduct: (product: { name: string; category: ProductCategory; price: number; imageUrl?: string }) => void;
+  onAddProduct: (product: {
+    name: string;
+    category: ProductCategory;
+    price: number;
+    imageUrl?: string;
+  }) => void;
 }
 
 export const AddProductModal: React.FC<AddProductModalProps> = ({
@@ -14,11 +27,11 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   onClose,
   onAddProduct,
 }) => {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState<ProductCategory>('Electronics');
-  const [price, setPrice] = useState('');
-  const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload');
-  const [imageUrl, setImageUrl] = useState('');
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState<ProductCategory>("Electronics");
+  const [price, setPrice] = useState("");
+  const [imageMode, setImageMode] = useState<"upload" | "url">("upload");
+  const [imageUrl, setImageUrl] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -30,32 +43,32 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
   // Close on Escape key and manage body overflow
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   const handleFileProcess = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file (PNG, JPG, WebP, etc.).');
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file (PNG, JPG, WebP, etc.).");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setError('Image file is too large. Please select an image under 5MB.');
+      setError("Image file is too large. Please select an image under 5MB.");
       return;
     }
 
@@ -64,7 +77,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      if (typeof e.target?.result === 'string') {
+      if (typeof e.target?.result === "string") {
         setUploadedImage(e.target.result);
       }
     };
@@ -105,15 +118,15 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
     setUploadedImage(null);
     setUploadedFileName(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const resetForm = () => {
-    setName('');
-    setCategory('Electronics');
-    setPrice('');
-    setImageUrl('');
+    setName("");
+    setCategory("Electronics");
+    setPrice("");
+    setImageUrl("");
     clearUploadedFile();
     setError(null);
   };
@@ -129,20 +142,20 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setError('Please enter a product name.');
+      setError("Please enter a product name.");
       return;
     }
 
     const parsedPrice = parseFloat(price);
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
-      setError('Please enter a valid positive price.');
+      setError("Please enter a valid positive price.");
       return;
     }
 
     let finalImageUrl: string;
-    if (imageMode === 'upload' && uploadedImage) {
+    if (imageMode === "upload" && uploadedImage) {
       finalImageUrl = uploadedImage;
-    } else if (imageMode === 'url' && imageUrl.trim()) {
+    } else if (imageMode === "url" && imageUrl.trim()) {
       finalImageUrl = imageUrl.trim();
     } else {
       finalImageUrl = getDefaultProductImage(trimmedName, category);
@@ -181,7 +194,10 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
             <div>
-              <h2 id="modal-add-product-title" className="text-lg font-semibold text-slate-900 leading-tight">
+              <h2
+                id="modal-add-product-title"
+                className="text-lg font-semibold text-slate-900 leading-tight"
+              >
                 Add Product
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -211,11 +227,18 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
         )}
 
         {/* Modal Form Content */}
-        <form id="modal-add-product-form" onSubmit={handleSubmit} className="space-y-4 pt-4">
+        <form
+          id="modal-add-product-form"
+          onSubmit={handleSubmit}
+          className="space-y-4 pt-4"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
             {/* Product Name */}
             <div className="sm:col-span-12 flex flex-col gap-1.5">
-              <label htmlFor="modal-product-name-input" className="text-xs font-medium text-slate-700">
+              <label
+                htmlFor="modal-product-name-input"
+                className="text-xs font-medium text-slate-700"
+              >
                 Product Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -235,14 +258,19 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
             {/* Category */}
             <div className="sm:col-span-6 flex flex-col gap-1.5">
-              <label htmlFor="modal-product-category-select" className="text-xs font-medium text-slate-700">
+              <label
+                htmlFor="modal-product-category-select"
+                className="text-xs font-medium text-slate-700"
+              >
                 Category
               </label>
               <div className="relative">
                 <select
                   id="modal-product-category-select"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as ProductCategory)}
+                  onChange={(e) =>
+                    setCategory(e.target.value as ProductCategory)
+                  }
                   className="w-full bg-slate-50 text-slate-900 text-sm pl-3.5 pr-8 py-2.5 rounded-lg border border-slate-200 appearance-none cursor-pointer focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
                 >
                   {CATEGORIES.map((cat) => (
@@ -257,7 +285,10 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
 
             {/* Price */}
             <div className="sm:col-span-6 flex flex-col gap-1.5">
-              <label htmlFor="modal-product-price-input" className="text-xs font-medium text-slate-700">
+              <label
+                htmlFor="modal-product-price-input"
+                className="text-xs font-medium text-slate-700"
+              >
                 Price (USD) <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
@@ -284,20 +315,25 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
             {/* Product Image Option (Upload from Computer OR Image URL) */}
             <div className="sm:col-span-12 flex flex-col gap-2 pt-1">
               <div className="flex items-center justify-between flex-wrap gap-1.5">
-                <span className="text-xs font-medium text-slate-700">Product Image</span>
+                <span className="text-xs font-medium text-slate-700">
+                  Product Image
+                </span>
                 {/* Mode Selector Toggle */}
-                <div id="modal-image-source-mode-selector" className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80">
+                <div
+                  id="modal-image-source-mode-selector"
+                  className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80"
+                >
                   <button
                     id="modal-select-upload-mode-btn"
                     type="button"
                     onClick={() => {
-                      setImageMode('upload');
+                      setImageMode("upload");
                       setError(null);
                     }}
                     className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                      imageMode === 'upload'
-                        ? 'bg-white text-indigo-600 shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-800'
+                      imageMode === "upload"
+                        ? "bg-white text-indigo-600 shadow-2xs"
+                        : "text-slate-500 hover:text-slate-800"
                     }`}
                   >
                     <Upload className="w-3.5 h-3.5" />
@@ -307,13 +343,13 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                     id="modal-select-url-mode-btn"
                     type="button"
                     onClick={() => {
-                      setImageMode('url');
+                      setImageMode("url");
                       setError(null);
                     }}
                     className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                      imageMode === 'url'
-                        ? 'bg-white text-indigo-600 shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-800'
+                      imageMode === "url"
+                        ? "bg-white text-indigo-600 shadow-2xs"
+                        : "text-slate-500 hover:text-slate-800"
                     }`}
                   >
                     <LinkIcon className="w-3.5 h-3.5" />
@@ -323,7 +359,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
               </div>
 
               {/* Upload from Computer Mode */}
-              {imageMode === 'upload' && (
+              {imageMode === "upload" && (
                 <div>
                   <input
                     ref={fileInputRef}
@@ -343,13 +379,15 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                         <img
                           src={uploadedImage}
                           alt="Product preview"
-                          className="w-14 h-14 object-cover rounded-md border border-indigo-200/80 shadow-2xs flex-shrink-0"
+                          className="w-14 h-14 object-cover rounded-md border border-indigo-200/80 shadow-2xs shrink-0"
                         />
                         <div className="flex flex-col min-w-0">
                           <span className="text-xs font-medium text-slate-800 truncate">
-                            {uploadedFileName || 'Uploaded Image'}
+                            {uploadedFileName || "Uploaded Image"}
                           </span>
-                          <span className="text-[11px] text-indigo-600 font-medium">Ready to use</span>
+                          <span className="text-[11px] text-indigo-600 font-medium">
+                            Ready to use
+                          </span>
                         </div>
                       </div>
                       <button
@@ -369,7 +407,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                       tabIndex={0}
                       onClick={() => fileInputRef.current?.click()}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                        if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
                           fileInputRef.current?.click();
                         }
@@ -379,18 +417,22 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                       onDrop={handleDrop}
                       className={`w-full border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5 ${
                         isDragging
-                          ? 'border-indigo-500 bg-indigo-50/60'
-                          : 'border-slate-200 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-300'
+                          ? "border-indigo-500 bg-indigo-50/60"
+                          : "border-slate-200 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-300"
                       }`}
                     >
                       <div className="w-9 h-9 rounded-full bg-indigo-100/70 text-indigo-600 flex items-center justify-center">
                         <Upload className="w-4 h-4" />
                       </div>
                       <p className="text-xs font-medium text-slate-700">
-                        <span className="text-indigo-600 font-semibold">Click to upload</span> or drag and drop image here
+                        <span className="text-indigo-600 font-semibold">
+                          Click to upload
+                        </span>{" "}
+                        or drag and drop image here
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        PNG, JPG, GIF, WebP up to 5MB (auto-assigned if left empty)
+                        PNG, JPG, GIF, WebP up to 5MB (auto-assigned if left
+                        empty)
                       </p>
                     </div>
                   )}
@@ -398,7 +440,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
               )}
 
               {/* Image Link URL Mode */}
-              {imageMode === 'url' && (
+              {imageMode === "url" && (
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
                     <ImageIcon className="w-3.5 h-3.5 text-slate-400" />

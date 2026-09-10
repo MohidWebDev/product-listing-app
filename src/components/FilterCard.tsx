@@ -1,12 +1,12 @@
-import React from 'react';
-import { Search, ChevronDown, X } from 'lucide-react';
-import { ProductCategory, CATEGORIES } from '../types';
+import React from "react";
+import { Search, ChevronDown, X } from "lucide-react";
+import { ProductCategory, CATEGORIES } from "../types";
 
 interface FilterCardProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  selectedCategory: ProductCategory | 'All';
-  onCategoryChange: (category: ProductCategory | 'All') => void;
+  selectedCategory: ProductCategory | "All";
+  onCategoryChange: (category: ProductCategory | "All") => void;
   onOpenAddModal?: () => void;
 }
 
@@ -16,7 +16,7 @@ export const FilterCard: React.FC<FilterCardProps> = ({
   selectedCategory,
   onCategoryChange,
 }) => {
-  const isFiltering = searchQuery.trim() !== '' || selectedCategory !== 'All';
+  const isFiltering = searchQuery.trim() !== "" || selectedCategory !== "All";
 
   return (
     <section
@@ -26,7 +26,10 @@ export const FilterCard: React.FC<FilterCardProps> = ({
     >
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 id="filters-title" className="text-base sm:text-lg font-semibold text-slate-900">
+          <h2
+            id="filters-title"
+            className="text-base sm:text-lg font-semibold text-slate-900"
+          >
             Filters
           </h2>
           {isFiltering && (
@@ -34,8 +37,8 @@ export const FilterCard: React.FC<FilterCardProps> = ({
               id="clear-filters-btn"
               type="button"
               onClick={() => {
-                onSearchChange('');
-                onCategoryChange('All');
+                onSearchChange("");
+                onCategoryChange("All");
               }}
               className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 transition-colors cursor-pointer"
             >
@@ -47,7 +50,10 @@ export const FilterCard: React.FC<FilterCardProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
           {/* Search Query */}
           <div className="sm:col-span-8 flex flex-col gap-1.5">
-            <label htmlFor="filter-search-input" className="text-xs font-medium text-slate-700">
+            <label
+              htmlFor="filter-search-input"
+              className="text-xs font-medium text-slate-700"
+            >
               Search Query
             </label>
             <div className="relative">
@@ -65,7 +71,7 @@ export const FilterCard: React.FC<FilterCardProps> = ({
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => onSearchChange('')}
+                  onClick={() => onSearchChange("")}
                   aria-label="Clear search query"
                   className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
@@ -77,14 +83,19 @@ export const FilterCard: React.FC<FilterCardProps> = ({
 
           {/* Category Dropdown */}
           <div className="sm:col-span-4 flex flex-col gap-1.5">
-            <label htmlFor="filter-category-select" className="text-xs font-medium text-slate-700">
+            <label
+              htmlFor="filter-category-select"
+              className="text-xs font-medium text-slate-700"
+            >
               Category
             </label>
             <div className="relative">
               <select
                 id="filter-category-select"
                 value={selectedCategory}
-                onChange={(e) => onCategoryChange(e.target.value as ProductCategory | 'All')}
+                onChange={(e) =>
+                  onCategoryChange(e.target.value as ProductCategory | "All")
+                }
                 className="w-full bg-slate-50 text-slate-900 text-sm pl-3.5 pr-8 py-2 rounded-lg border border-slate-200 appearance-none cursor-pointer focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
               >
                 <option value="All">All Categories</option>

@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { Trash2, ImageOff } from 'lucide-react';
-import { Product } from '../types';
-import { getDefaultProductImage } from '../data/initialProducts';
+import React, { useState } from "react";
+import { Trash2, ImageOff } from "lucide-react";
+import { Product } from "../types";
+import { getDefaultProductImage } from "../data/initialProducts";
 
 interface ProductCardProps {
   product: Product;
   onDelete: (id: string) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  onDelete,
+}) => {
   const defaultImg = getDefaultProductImage(product.name, product.category);
   const [imgSrc, setImgSrc] = useState<string>(product.imageUrl || defaultImg);
   const [hasError, setHasError] = useState<boolean>(false);
@@ -29,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete }) =
       {/* Product Image Area: adjusted height & width with optimal 4:3 / balanced aspect ratio */}
       <div
         id={`product-image-container-${product.id}`}
-        className="w-full aspect-[4/3] min-h-[170px] max-h-[220px] bg-slate-100 overflow-hidden relative border-b border-slate-100 flex items-center justify-center"
+        className="w-full aspect-4/3 min-h-42.5 max-h-55 bg-slate-100 overflow-hidden relative border-b border-slate-100 flex items-center justify-center"
       >
         {!hasError ? (
           <img
@@ -44,7 +47,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete }) =
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-indigo-50/50 text-indigo-400 gap-1.5 p-4 text-center">
             <ImageOff className="w-8 h-8 stroke-[1.5]" />
-            <span className="text-[11px] font-medium text-slate-400">Image unavailable</span>
+            <span className="text-[11px] font-medium text-slate-400">
+              Image unavailable
+            </span>
           </div>
         )}
       </div>
@@ -55,7 +60,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete }) =
         <h3
           id={`product-title-${product.id}`}
           title={product.name}
-          className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-[2.5rem] break-words"
+          className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-10 wrap-break-word"
         >
           {product.name}
         </h3>
