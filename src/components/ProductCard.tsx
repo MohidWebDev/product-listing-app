@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Trash2, ImageOff } from "lucide-react";
 import { Product } from "../types";
-import { getDefaultProductImage } from "../data/initialProducts";
 
 interface ProductCardProps {
   product: Product;
@@ -12,16 +11,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onDelete,
 }) => {
-  const defaultImg = getDefaultProductImage(product.name, product.category);
-  const [imgSrc, setImgSrc] = useState<string>(product.imageUrl || defaultImg);
   const [hasError, setHasError] = useState<boolean>(false);
 
   const handleImageError = () => {
-    if (imgSrc !== defaultImg) {
-      setImgSrc(defaultImg);
-    } else {
-      setHasError(true);
-    }
+    setHasError(true);
   };
 
   return (
@@ -34,10 +27,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         id={`product-image-container-${product.id}`}
         className="w-full aspect-4/3 min-h-42.5 max-h-55 bg-slate-100 overflow-hidden relative border-b border-slate-100 flex items-center justify-center"
       >
-        {!hasError ? (
+        {!hasError && product.imageUrl ? (
           <img
             id={`product-img-${product.id}`}
-            src={imgSrc}
+            src={product.imageUrl}
             alt={product.name}
             loading="lazy"
             referrerPolicy="no-referrer"
@@ -48,7 +41,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <div className="w-full h-full flex flex-col items-center justify-center bg-indigo-50/50 text-indigo-400 gap-1.5 p-4 text-center">
             <ImageOff className="w-8 h-8 stroke-[1.5]" />
             <span className="text-[11px] font-medium text-slate-400">
-              Image unavailable
+              No image
             </span>
           </div>
         )}

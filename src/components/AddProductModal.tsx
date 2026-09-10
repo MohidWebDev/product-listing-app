@@ -9,7 +9,6 @@ import {
   X,
 } from "lucide-react";
 import { ProductCategory, CATEGORIES } from "../types";
-import { getDefaultProductImage } from "../data/initialProducts";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -152,13 +151,13 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
       return;
     }
 
-    let finalImageUrl: string;
+    let finalImageUrl: string | undefined;
     if (imageMode === "upload" && uploadedImage) {
       finalImageUrl = uploadedImage;
     } else if (imageMode === "url" && imageUrl.trim()) {
       finalImageUrl = imageUrl.trim();
     } else {
-      finalImageUrl = getDefaultProductImage(trimmedName, category);
+      finalImageUrl = undefined;
     }
 
     onAddProduct({
@@ -431,8 +430,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                         or drag and drop image here
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        PNG, JPG, GIF, WebP up to 5MB (auto-assigned if left
-                        empty)
+                        PNG, JPG, GIF, WebP up to 5MB (a placeholder is shown if
+                        left empty)
                       </p>
                     </div>
                   )}
@@ -450,7 +449,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({
                     type="url"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://images.unsplash.com/... (auto-assigned if empty)"
+                    placeholder="https://images.unsplash.com/... (placeholder shown if empty)"
                     className="w-full bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm pl-8 pr-3.5 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
                   />
                 </div>
