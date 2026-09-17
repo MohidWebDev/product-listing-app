@@ -19,7 +19,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div
+    <Link
+      to={`/products/${product.id}`}
       id={`product-card-${product.id}`}
       className="bg-white rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group min-w-0"
     >
@@ -51,15 +52,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Information Area */}
       <div className="p-4 flex flex-col gap-2 flex-1">
         {/* Product Name (allows wrapping to two lines, no truncation) */}
-        <Link to={`/products/${product.id}`}>
-          <h3
-            id={`product-title-${product.id}`}
-            title={product.name}
-            className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-10 wrap-break-word hover:text-indigo-600 transition-colors"
-          >
-            {product.name}
-          </h3>
-        </Link>
+        <h3
+          id={`product-title-${product.id}`}
+          title={product.name}
+          className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-10 wrap-break-word"
+        >
+          {product.name}
+        </h3>
 
         {/* Category badge/pill below the name */}
         <div>
@@ -89,7 +88,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <button
           id={`delete-product-${product.id}`}
           type="button"
-          onClick={() => onDelete(product.id)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete(product.id);
+          }}
           aria-label={`Delete ${product.name}`}
           className="inline-flex items-center gap-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 active:bg-rose-100 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-rose-400 cursor-pointer"
         >
@@ -97,6 +100,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span>Delete</span>
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
