@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Trash2, ImageOff } from "lucide-react";
 import { Product } from "../types";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -50,13 +51,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Information Area */}
       <div className="p-4 flex flex-col gap-2 flex-1">
         {/* Product Name (allows wrapping to two lines, no truncation) */}
-        <h3
-          id={`product-title-${product.id}`}
-          title={product.name}
-          className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-10 wrap-break-word"
-        >
-          {product.name}
-        </h3>
+        <Link to={`/products/${product.id}`}>
+          <h3
+            id={`product-title-${product.id}`}
+            title={product.name}
+            className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 min-h-10 wrap-break-word hover:text-indigo-600 transition-colors"
+          >
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Category badge/pill below the name */}
         <div>
