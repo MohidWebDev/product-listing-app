@@ -1,5 +1,7 @@
 import React from "react";
 import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 interface HeaderProps {
   totalCount: number;
@@ -10,6 +12,7 @@ export const Header: React.FC<HeaderProps> = ({
   totalCount,
   onOpenAddModal,
 }) => {
+  const { user, logout } = useAuth();
   return (
     <header
       id="app-header"
@@ -29,6 +32,23 @@ export const Header: React.FC<HeaderProps> = ({
           {totalCount} {totalCount === 1 ? "Total Product" : "Total Products"}
         </span>
       </div>
+
+      {user ? (
+        <button
+          type="button"
+          onClick={logout}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-lg border border-slate-200 shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300 cursor-pointer whitespace-nowrap"
+        >
+          Logout
+        </button>
+      ) : (
+        <Link
+          to="/login"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-lg border border-slate-200 shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300 whitespace-nowrap"
+        >
+          Login
+        </Link>
+      )}
 
       <button
         id="open-add-product-modal-btn"
